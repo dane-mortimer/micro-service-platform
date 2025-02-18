@@ -2,7 +2,7 @@
 
 [tldr; How do I use this thing?](#usage)
 
-## TOC 
+## TOC
 
 1. [Summary](#summary)
 2. [Project Structure](#project-structure)
@@ -21,11 +21,11 @@ For simplicity, the services are defined within this repository. However, in a r
 
 ## Project structure
 
-``` 
+```
 micro-service-platform/          # Root directory of the project
 ├── bin                          # CDK application entry point
 ├── config                       # CDK configuration file for multi-environment infrastructure
-├── constructs                   # Construct Library 
+├── constructs                   # Construct Library
 ├── lib                          # Stacks
 ├── scripts                      # Scripts / Any prerequisites
 ├── services                     # Application Services
@@ -45,20 +45,34 @@ Additional services can be easily integrated in the future by creating and build
 
 ## Usage
 
-Pre-reqs:
-  - Docker installed
-  - Node installed
-  - `npm install -g aws-cdk`
+### Development tools
+
+```bash
+node --version
+# v18.18.2
+
+npm install -g aws-cdk
+cdk --version
+# 2.179 (Use any 2.x version greater than this)
+
+docker --version
+# Docker version 20.10.10, build b485636
+
+# For development - we use pre-commit hooks
+brew install pre-commit
+pre-commit install
+```
 
 ### Assume credentials & Bootstrap account
 
 1. [Assume AWS Credentials](https://docs.aws.amazon.com/cli/v1/userguide/cli-chap-configure.html)
-    ``` bash
+    ```bash
     # Once credentials have been assumed run this command
     export CDK_DEFAULT_ACCOUNT=$(aws sts get-caller-identity --query "Account" --output text)
     ```
 1. Bootstrap CDK account
-    ``` bash
+
+    ```bash
     export AWS_DEFAULT_REGION="eu-west-1"
     export CDK_DEFAULT_REGION=$AWS_DEFAULT_REGION
 
@@ -69,49 +83,49 @@ Pre-reqs:
 
 1. Check the environment configuration and ensure it matches your services.
 
-``` typescript
+```typescript
 // ./config/config.ts
 
 const CONFIGURATION: IConfig = {
-  'dev': {
-    account: '12345678901',
-    region: 'eu-west-1',
-    services: [
-      {
-        serviceDockerfileDirectory: path.join(__dirname, '../services/user-service'),
-        name: 'user-service', 
-        containerPort: 80,
-        taskRolePolicies: [], 
-      },
-      {
-        serviceDockerfileDirectory: path.join(__dirname, '../services/movie-service'),
-        name: 'movie-service', 
-        dependentServices: [
-          {
-            name: 'user-service',
-            port: 80
-          }
+    dev: {
+        account: '12345678901',
+        region: 'eu-west-1',
+        services: [
+            {
+                serviceDockerfileDirectory: path.join(__dirname, '../services/user-service'),
+                name: 'user-service',
+                containerPort: 80,
+                taskRolePolicies: [],
+            },
+            {
+                serviceDockerfileDirectory: path.join(__dirname, '../services/movie-service'),
+                name: 'movie-service',
+                dependentServices: [
+                    {
+                        name: 'user-service',
+                        port: 80,
+                    },
+                ],
+                taskRolePolicies: [],
+            },
         ],
-        taskRolePolicies: []
-      },
-    ]
-  },
-}
+    },
+};
 ```
 
 ### Deploy CDK infrastructure
 
 Once your configuration has been successfully set, you can simply run the following command
 
-:warning: `dev` is the key in the configuration file. 
+:warning: `dev` is the key in the configuration file.
 
-``` bash
-cdk deploy -c "environment=dev" 
+```bash
+cdk deploy -c "environment=dev"
 ```
 
 ## Local Development
 
-``` bash
+```bash
 cd services
 
 # Use docker-compose for local development

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { MicroServicePlatformStack } from '../lib/stack';
 import CONFIGURATION, { IEnvConfig } from '../config/config';
+import { MicroServicePlatformStack } from '../lib/stack';
 
 const app = new cdk.App();
 
@@ -11,16 +11,16 @@ const app = new cdk.App();
 const environment: string = app.node.getContext('environment');
 
 /**
- * Environment specific configuration. 
+ * Environment specific configuration.
  */
 const config: IEnvConfig = CONFIGURATION[environment];
 
 new MicroServicePlatformStack(app, 'MicroServicePlatformServicesStack', {
-  env: { 
-    account: config.account, 
-    region: config.region 
-  },
-  config,
-  environment,
-  appName: 'example-app'
+    env: {
+        account: config.account,
+        region: config.region,
+    },
+    config,
+    environment,
+    appName: 'example-app',
 });
