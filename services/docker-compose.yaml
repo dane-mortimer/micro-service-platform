@@ -1,0 +1,26 @@
+version: "3.8"
+networks:
+  local_net:
+    driver: bridge
+
+services:
+  movie-service:
+    build: ./movie-service
+    networks:
+      - local_net
+    ports:
+      - "8081:8081"
+    environment:
+      - USER_SERVICE_DNS=user-service:8080
+      - ENVIRONMENT=local
+    depends_on:
+      - user-service
+
+  user-service:
+    build: ./user-service
+    environment:
+      - ENVIRONMENT=local
+    networks: 
+      - local_net
+    ports:
+      - "8080:8080"
