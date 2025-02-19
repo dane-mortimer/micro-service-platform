@@ -15,10 +15,19 @@ export interface BaseServiceProps {
      */
     logRetentionPeriod?: RetentionDays;
 
+    /**
+     * Vpc where the service will be placed
+     */
     vpc: Vpc;
 
+    /**
+     * Encryption key for data at rest
+     */
     encryptionKey: Key;
 
+    /**
+     * Removal policy for resources that contain removalPolicy attribute
+     */
     removalPolicy: RemovalPolicy;
 }
 

@@ -8,13 +8,41 @@ import {
 } from 'aws-cdk-lib/aws-elasticloadbalancingv2';
 import { Construct } from 'constructs';
 
+// TODO: Update this construct to use a certificate
 export interface LoadBalancerProps {
+    /**
+     * Vpc where the load balancer is placed
+     */
     vpc: Vpc;
+
+    /**
+     * Port to access load balancer on
+     */
     port: number;
+
+    /**
+     * Port for container or service, this where the target group will be mapped to
+     */
     containerPort?: number;
+
+    /**
+     * Whether the loadbalancer should be placed in public subnets
+     */
     internetFacing?: boolean;
+
+    /**
+     * Ingress peer, e.g. CIDR range to allow access to load balancer
+     */
     ingressPeer: IPeer;
+
+    /**
+     * Target group targets, e.g. ECS Service, Autoscaling Group, Lambda Function
+     */
     target: IApplicationLoadBalancerTarget;
+
+    /**
+     * Service security group, this is to allow access from load balancer security group
+     */
     serviceSecurityGroup: SecurityGroup;
 }
 
