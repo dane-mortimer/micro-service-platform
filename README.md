@@ -15,9 +15,11 @@
 
 ## Summary
 
-The purpose of this CDK application is to provision and manage a fully managed microservices architecture using Amazon ECS Fargate. The infrastructure is driven by a configuration file that defines services and their associated settings, such as CPU, memory, and whether a load balancer should be attached. For each service, you can specify a task role to grant access to necessary AWS resources. Additionally, you can define dependencies between services, which will automatically inject the dependent services' DNS names as environment variables (e.g., USER_SERVICE_DNS) for seamless communication.
+This CDK application is designed to provision and manage a fully managed microservices architecture leveraging Amazon ECS Fargate. The infrastructure is dynamically configured via a configuration file that specifies services and their associated settings, such as CPU, memory, and whether a load balancer should be attached. Each service can be assigned a task role to grant access to necessary AWS resources. Additionally, dependencies between services can be defined, enabling the automatic injection of dependent services' DNS names as environment variables (e.g., USER_SERVICE_DNS) to facilitate seamless communication.
 
-For simplicity, the services are defined within this repository. However, in a real-world scenario, these services would typically be managed in separate repositories, owned and maintained by independent teams.
+For simplicity, the services are defined within this repository. In a real-world scenario, however, these services would typically be managed in separate repositories, owned and maintained by independent teams.
+
+Looking ahead, I plan to extend the service constructs to support additional service types, such as EC2 Auto Scaling Groups and Lambda functions, to further enhance the flexibility and scalability of the architecture.
 
 ## Project structure
 
@@ -25,9 +27,8 @@ For simplicity, the services are defined within this repository. However, in a r
 micro-service-platform/          # Root directory of the project
 ├── bin                          # CDK application entry point
 ├── config                       # CDK configuration file for multi-environment infrastructure
-├── constructs                   # Construct Library
-├── lib                          # Stacks
-├── scripts                      # Scripts / Any prerequisites
+├── constructs                   # Construct Library (This is where we do most of the heavy lifting)
+├── lib                          # CDK Stack Initialization
 ├── services                     # Application Services
 ├── test                         # Infrastructure Unit tests
 └── utils                        # Utility functions
