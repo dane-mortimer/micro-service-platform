@@ -3,11 +3,13 @@ import { Vpc } from 'aws-cdk-lib/aws-ec2';
 import { Cluster, ContainerInsights } from 'aws-cdk-lib/aws-ecs';
 import { Key } from 'aws-cdk-lib/aws-kms';
 import { Construct } from 'constructs';
-import { EcsFargateService, IService } from './ecs-fargate-service';
+import { EcsFargateService } from './services/ecs-fargate-service';
+import { IECSService } from './interfaces/IECSService';
+import { LoadBalancer } from './components/load-balancer';
 
 export interface MicroServicePlatformProps {
     maxAzs?: 2;
-    services: IService[];
+    services: IECSService[];
     serviceConnectNamepsace: string;
     removalPolicy?: RemovalPolicy;
 }
@@ -37,14 +39,26 @@ export class MicroServicePlatform extends Construct {
             removalPolicy,
         });
 
-        props.services.forEach((serviceDefinition: IService) => {
-            new EcsFargateService(this, `${serviceDefinition.name}`, {
-                ...serviceDefinition,
+        props.services.forEach((serviceDefinition: IECSService) => {
+            const serviceConstruct = new EcsFargateService(this, serviceDefinition.name, {
+                vpc,
                 cluster,
                 encryptionKey,
+                service: serviceDefinition,
                 serviceConnectNamespace: serviceConnectNamepsace.namespaceName,
                 removalPolicy,
             });
+
+            if (serviceDefinition.loadBalancerSettings) {
+                new LoadBalancer(this, `${serviceDefinition.name}`, {
+                    vpc,
+                    containerPort: serviceDefinition.port,
+                    port: serviceDefinition.loadBalancerSettings.port,
+                    ingressPeer: serviceDefinition.loadBalancerSettings.peer,
+                    target: serviceConstruct.service,
+                    serviceSecurityGroup: serviceConstruct.serviceSecurityGroup,
+                });
+            }
         });
     }
 }
