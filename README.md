@@ -5,6 +5,7 @@
 [Check out the terraform version of this pattern](https://github.com/dane-mortimer/micro-services-platform-tf)
 
 :warning: **_Disclaimer_** :warning:
+
 This CDK Application is a blueprint or starting point for developing your own microservices platform. It has not been deployed to avoid incurring infrastructure costs.
 
 To make this functional, additional steps are required, such as:
