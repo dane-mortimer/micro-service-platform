@@ -2,6 +2,18 @@
 
 [tldr; How do I use this thing?](#usage)
 
+:warning: **_Disclaimer_** :warning:
+This CDK Application is a blueprint or starting point for developing your own microservices platform. It has not been deployed to avoid incurring infrastructure costs.
+
+To make this functional, additional steps are required, such as:
+
+-   Developing your own services.
+-   Adding SSL/TLS certificates to the load balancer.
+-   Configuring security, monitoring, and other production-grade requirements.
+-   (...and more)
+
+This blueprint is not production-ready and should not be treated as such. Use it as a reference or foundation for building and customizing your platform according to your specific needs.
+
 ## TOC
 
 1. [Summary](#summary)
@@ -124,7 +136,7 @@ Once your configuration has been successfully set, you can simply run the follow
 cdk deploy -c "environment=dev"
 ```
 
-## Local Development
+## Service Development
 
 ```bash
 cd services
